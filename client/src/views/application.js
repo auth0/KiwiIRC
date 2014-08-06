@@ -329,14 +329,23 @@ _kiwi.view.Application = Backbone.View.extend({
         var icon = this.model.get('base_path') + '/assets/img/ico.png';
 
         // Check if we have notification support
-        if (!window.webkitNotifications)
-            return;
 
-        if (this.has_focus)
-            return;
+        if (this.has_focus) return;
 
-        if (webkitNotifications.checkPermission() === 0){
+        if (window.webkitNotifications && webkitNotifications.checkPermission() === 0){
             window.webkitNotifications.createNotification(icon, title, message).show();
         }
+
+        if (window.Notification && window.Notification.permission === 'granted') {
+            var n = new Notification(title, {
+                body: message,
+                icon: icon
+            });
+            n.onshow = function () {
+              setTimeout(n.close, 5000);
+            };
+        }
+
+
     }
 });

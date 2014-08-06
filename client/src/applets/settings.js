@@ -122,7 +122,15 @@
         },
 
         enableNoticiations: function(event){
-            window.webkitNotifications.requestPermission();
+            if (window.webkitNotifications) {
+                window.webkitNotifications.requestPermission();
+            } else {
+                Notification.requestPermission( function(status) {
+                    if (Notification.permission !== status) {
+                        Notification.permission = status;
+                    }
+                });
+            }
         }
 
     });

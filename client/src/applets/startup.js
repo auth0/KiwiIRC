@@ -4,11 +4,21 @@
 
 
         initialize: function (options) {
+            if (window.webkitNotifications) {
+                window.webkitNotifications.requestPermission();
+            } else if (window.Notification) {
+                window.Notification.requestPermission( function(status) {
+                    if (Notification.permission !== status) {
+                      Notification.permission = status;
+                    }
+                });
+            }
             this.showConnectionDialog();
         },
 
 
         showConnectionDialog: function() {
+
             var connection_dialog = this.connection_dialog = new _kiwi.model.NewConnection();
             connection_dialog.populateDefaultServerSettings();
 
